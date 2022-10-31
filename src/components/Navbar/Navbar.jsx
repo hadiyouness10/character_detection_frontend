@@ -6,40 +6,43 @@ export default class Navbar extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            algorithm:"Visualize!",
-            feature:'None',
-            maze:"Maze Algorithms",
-            pathState:false,
-            mazeState:false,
-            speedState:"Fast"
+          trainStatus:false,
+          testStatus:false,
 
         };
+    }
+
+    Test(){
+      this.setState({
+        testStatus:true,
+      })
+    }
+
+    Train(){
+      this.setState({
+        testStatus:true,
+      })
     }
 
 
     render() {
 
-        return (<div>
+        return (
             <div id="navbarDiv">
             <nav className="navbar navbar-inverse">
               <div className="container-fluid">
                 <div className="navbar-header">
                   <a href="#" className="navbar-brand" id="refreshBtn"> Letter Detection</a>
-                </div>          
+                </div>
+                <ul className="nav navbar-nav"> 
+                <li id='TestData' onClick={() => this.Test()}><a href="#">Test</a></li>
+                <li id='TrainData' onClick={() => this.Train()}><a href="#">Train</a></li>
+                </ul>
+
               </div>
             </nav>
           </div> 
-
-   
-      <div id='mainText'>
-        <ul>
-          <li>
-            <div className="start start-node"></div>Train</li>
-          <li>
-            <div className="target finish-node"></div>Test</li>
-        </ul>
-      </div>
-          </div>
+          
 
         )
 
