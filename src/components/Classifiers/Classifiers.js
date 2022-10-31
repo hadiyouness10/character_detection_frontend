@@ -10,11 +10,12 @@ function Classifiers(props) {
 
     useEffect(() => {
         getModels();
-    })
+    }, [models])
 
     function getModels() {
         axios.get(backend + '/info').then((response) => {
-        console.log(response)
+            console.log(response)
+            setModels(response.data.models);
     })
 }
 
