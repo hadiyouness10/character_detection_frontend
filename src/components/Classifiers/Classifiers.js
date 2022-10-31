@@ -6,22 +6,16 @@ import Classifier from '../Classifier/Classifier';
 
 function Classifiers(props) {
 
-const [models, setModels] = useState([])
+    const [models, setModels] = useState([]);
 
-function getModels() {
-let models_1 = []
-// Runs after the first render() lifecycle
-console.log("Did mount called");
-models_1 = fetch(`${backend}/info`).then((result) => {
-if (result.ok) {
-    result.json().then((body) => {
-        setModels(body);
-        
-    });
-}
+    useEffect(() => {
+        getModels();
+    })
 
-});
-return models_1;
+    function getModels() {
+        axios.get(backend + '/info').then((response) => {
+        console.log(response)
+    })
 }
 
 useEffect(() => {
