@@ -2,7 +2,7 @@ import React, { Component , useEffect, useState} from 'react';
 
 import {backend} from "../../config"
 import Classifier from '../Classifier/Classifier';
-
+import axios from 'axios';
 
 function Classifiers(props) {
 
