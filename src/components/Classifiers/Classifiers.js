@@ -1,8 +1,8 @@
-import React, { Component , useEffect, useState} from 'react';
+import React, {  useEffect, useState} from 'react';
 
 import {backend} from "../../config"
 import Classifier from '../Classifier/Classifier';
-import axios from 'axios';
+import axios from 'axios'
 
 function Classifiers(props) {
 
@@ -10,27 +10,23 @@ function Classifiers(props) {
 
     useEffect(() => {
         getModels();
-    }, [models])
+    }, [])
 
     function getModels() {
         axios.get(backend + '/info').then((response) => {
             console.log(response)
-            setModels(response.data.models);
+            setModels(response.data.available_models);
     })
 }
 
-useEffect(() => {
-    getModels()
-}, [models])
 
  return (
-    <div>
-        Hello
-        {/* {models.map((item,index)=>{
+    <div className ="cards-row">
+        {Object.keys(models).map((model)=>{
+        
+        return <Classifier modelName = {model} features = {models[model]['features']} testing_accuracy={models[model]['testing_accuracy']} traning_accuracy={models[model]['training_accuracy']} training={models[model]['training']} />
 
-        return <Classifier key={index} />
-
-        })} */}
+        })}
     </div>
  );
  

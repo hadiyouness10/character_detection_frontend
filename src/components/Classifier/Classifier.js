@@ -4,6 +4,7 @@ import { Button } from "@material-ui/core";
 import "./Classifier.css";
 import { backend } from "../../config";
 import {predict, subscribeToPrediction} from "../API/BackendCalls";
+import { Height } from "@material-ui/icons";
 
 function Classifier(props) {
   const [image, setImage] = useState();
@@ -123,15 +124,17 @@ function Classifier(props) {
   }
 
   return (
-    <Card className="cardClass" variant="outlined">
-      <div className="cardBody">
-        <h1>Classification</h1>
-        {imageOrButton}
-        <div className="predictionResult">
-          <h3 className="predictionText">{prediction}</h3>
-        </div>
-      </div>
-    </Card>
+    <div class="card">
+	<div class="card-title">
+    Model: {props.modelName}	
+	</div>
+	<div class="card-desc">
+    Features: {props.features}
+    </div>
+	<div class="card-actions">
+		<button type='button' class='card-action-readMore'>More Info</button>
+	</div>
+</div>
   );
 }
 
