@@ -36,6 +36,10 @@ body {
   transform-origin: left center;
   background-color: #fff;
 }
+
+.checked{
+  background-color: rgb(99, 99, 221);
+}
 .card-title {
   padding-bottom: 0.5em;
   padding-left: 0.5em;
