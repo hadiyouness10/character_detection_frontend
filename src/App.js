@@ -5,6 +5,7 @@ import ModelData from './components/Cards/ModelData';
 import TrainingCard from './components/Cards/TrainingCard';
 import Classifiers from './components/Classifiers/Classifiers'
 import Methods from './components/Methods/Methods';
+import TrainingComponent from './components/TrainingComponent/TrainingComponent';
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
       <Navbar/>
       <Classifiers/>
       <Methods/>
+      <TrainingComponent/>
   </div>
   );
 }
