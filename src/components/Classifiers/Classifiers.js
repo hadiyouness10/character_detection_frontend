@@ -21,7 +21,7 @@ function Classifiers(props) {
 
 
  return (
-    <div className ="cards-row">
+    <div className ="cards-row" >
         {Object.keys(models).map((model)=>{
         
         return <Classifier modelName = {model} features = {models[model]['features']} testing_accuracy={models[model]['testing_accuracy']} traning_accuracy={models[model]['training_accuracy']} training={models[model]['training']} />

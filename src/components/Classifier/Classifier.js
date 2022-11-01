@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Card from "@material-ui/core/Card";
 import { Button } from "@material-ui/core";
 import "./Classifier.css";
@@ -9,8 +9,17 @@ import { Height } from "@material-ui/icons";
 function Classifier(props) {
   const [image, setImage] = useState();
   const [prediction, setPrediction] = useState("");
-
+  const [features, setFeatures] = useState(props.features === undefined? []: props.features);
   const hiddenFileInput = React.useRef(null);
+  // if (props.features !== undefined) {
+  //   setFeatures([...props.features]);
+  // };
+  useEffect(() => {
+    console.log('re-rendering');
+  }, []);
+
+
+
   const handleClick = (event) => {
     hiddenFileInput.current.click();
   };
@@ -124,15 +133,19 @@ function Classifier(props) {
   }
 
   return (
-    <div class="card">
-	<div class="card-title">
-    Model: {props.modelName}	
+    <div className="card">
+	<div className="card-title">
+        Model: {props.modelName}
 	</div>
-	<div class="card-desc">
-    Features: {props.features}
+      <div className="card-desc">
+        Features: {features.map(feature => {
+          return (
+            <p>{feature}</p>
+          )
+        })}
     </div>
-	<div class="card-actions">
-		<button type='button' class='card-action-readMore'>More Info</button>
+	<div className="card-actions">
+		<button type='button' className="btn btn-warning" style={{float: 'right', margin: 20}}>More Info</button>
 	</div>
 </div>
   );
