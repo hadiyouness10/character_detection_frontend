@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Card from "@material-ui/core/Card";
 import { Button } from "@material-ui/core";
 import { backend } from "../../config";
@@ -14,6 +14,11 @@ function Methods(props) {
   const [isPredictOn, setPredict] = useState("");
 
   const hiddenFileInput = React.useRef(null);
+  
+  useEffect(() => {
+    console.log("Hello")
+}, [])
+
   const handleClick = (event) => {
     hiddenFileInput.current.click();
   };
@@ -75,19 +80,10 @@ function Methods(props) {
     };
   }
 
-  function browseButton() {
-    return (
-      <div className="predictionButtons">
-        <Button
-          className="trainingButtons"
-          variant="contained"
-          color="primary"
-          onClick={handleClick}
-          disableElevation
-        >
-          Browse
-        </Button>
-        <input
+  return (
+    <div>
+    <div style={{alignContent: 'center', display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: 50}}>
+                <input
           type="file"
           ref={hiddenFileInput}
           style={{ display: "none" }}
@@ -100,53 +96,17 @@ function Methods(props) {
             setImage(URL.createObjectURL(hiddenFileInput.current.files[0]));
           }}
         />
+        <button onClick={handleClick} className="btn btn-primary" style={{marginRight: 15, fontSize: '20px'}}>Browse</button>
+        <button className="btn btn-warning" style={{fontSize: '20px'}}>Draw</button>
+    </div>
+    <div style={{alignContent: 'center', display: 'flex', justifyContent: 'center', marginTop: 20}}>
+    {image === undefined? 
+        '':
+            <div className="">
+        <img className="myImage" style={{width: '300px', height: '300px'}} src={image} alt="" />
       </div>
-    );
-  }
-
-  var imageOrButton;
-  if (typeof image == "undefined") {
-    setPredict(false)
-    imageOrButton = browseButton();
-  } else {
-    setPredict(true)
-    imageOrButton = (
-      <div className="cardBody">
-        <img className="myImage" src={image} alt="" />
-        {browseButton}
-      </div>
-    );
-  }
-
-  return (
-    <div className="cards-row">
-        <div className= "card">
-            <div className="card-title">
-            Upload Image
-            </div>
-            <div className="card-actions">
-            {imageOrButton}
-            </div>
-        </div>
-        <div className= "card">
-            <div className="card-title">
-            Draw
-            </div>
-            <div className="card-actions">
-                <button type='button' className='card-action-readMore'>More Info</button>
-            </div>
-        </div>
-        <br></br> <br></br>
-        <Button
-          disabled={!isPredictOn}
-          color={isPredictOn ? "secondary" : "default"}
-          className="trainingButtons"
-          variant="contained"
-          disableElevation
-          onClick={handlePredict}
-        >
-          Predict
-        </Button>
+        }
+    </div>
     </div>
   );
 
