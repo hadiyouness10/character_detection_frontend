@@ -11,6 +11,14 @@ function TrainingComponent(props) {
 
     const [checked, setChecked] = useState([]);
     const [features, setFeatures] = useState(['pixels_per_segment', 'horizontal_histogram', 'vertical_histogram'])
+
+
+    function getFeatures() {
+        axios.get(backend + '/features').then((response) => {
+            setFeatures(response.data.features);
+    })
+    }
+
     const [inputLines, setinputLines] = useState([
         {
             startingPoint: [350, 50],
@@ -99,12 +107,14 @@ function TrainingComponent(props) {
             currentinputLines[i]['dash'] = 0;
             currentoutputLines[i]['dash'] = 0;
         }
+
         setinputLines(currentinputLines);
         setoutputLines(currentoutputLines);
         setClassifiers(currentClassifiers);
         console.log(currentClassifiers)
     }
     useEffect(() => {
+        getFeatures();
         console.log('rerendering')
     }, [classifiers])
 
@@ -119,12 +129,17 @@ function TrainingComponent(props) {
         console.log(updatedList);
       };
     function onTrain() {
-        console.log(classifiers);
-        console.log(checked);
         let finalClassifiers = [...classifiers];
         finalClassifiers = finalClassifiers.filter(classifier => classifier['picked'] === true)
-        console.log(finalClassifiers);
-        axios.post(backend + '/train_new_model', finalClassifiers).then((response) => {
+        var models = []
+        finalClassifiers.map((classifier,i) => (
+            models[i] = {'name':classifier['name'], 'weight':1}
+            )
+        )
+        console.log(checked);
+        console.log(models)
+        let data = {'models': models, 'features':checked}
+        axios.post(backend + '/train_new_model', data).then((response) => {
             console.log(response);
         })
       }
@@ -212,8 +227,6 @@ function TrainingComponent(props) {
                             fontSize={20}
                             />
                     </Layer>
-
-                        
             </Stage>
                 </div>
                 </div>

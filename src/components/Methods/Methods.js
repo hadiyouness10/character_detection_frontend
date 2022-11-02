@@ -68,7 +68,7 @@ function Methods({ chooseImage }) {
     console.log(lines)
   };
 
-  async function predict() {
+  async function handlePredict() {
     let base64;
     if (draw) {
       base64 = await exportAsImage(exportRef.current, 'test')
@@ -166,9 +166,7 @@ function Methods({ chooseImage }) {
           </Stage>
           : ''}
       </div>
-      <button onClick={() => predict()}>
-          Predict
-          </button>
+      <button onClick={handlePredict} className="btn btn-secondary button" style={{marginLeft:'45%' , fontSize: '30px'}}>Predict</button>
     </div>
   );
 
