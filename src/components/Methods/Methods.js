@@ -96,8 +96,8 @@ function Methods(props) {
             setImage(URL.createObjectURL(hiddenFileInput.current.files[0]));
           }}
         />
-        <button onClick={handleClick} className="btn btn-primary" style={{marginRight: 15, fontSize: '20px'}}>Browse</button>
-        <button className="btn btn-warning" style={{fontSize: '20px'}}>Draw</button>
+        <button onClick={handleClick} className="btn btn-primary button" style={{marginRight: 15, fontSize: '20px'}}>Browse</button>
+        <button className="btn btn-warning button" style={{fontSize: '20px'}}>Draw</button>
     </div>
     <div style={{alignContent: 'center', display: 'flex', justifyContent: 'center', marginTop: 20}}>
     {image === undefined? 

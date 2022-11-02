@@ -119,5 +119,31 @@
     flex-direction: column;
     }
 
+    .button {
+      display: inline-block;
+      margin: 1em 1.5%;
+      animation: scl 0.5s ease-in-out;
+      transform-origin: left center;
 
+  }
+
+    @keyframes ripple {
+      to {
+          transform: scale(2.5);
+          opacity: 0;
+      }
+  }
   
+  @keyframes scl {
+      0% {
+          opacity: 0;
+          transform: scaleX(0.9) translateX(-50px);
+      }
+      75% {
+          opacity: 0.2;
+      }
+      100% {
+          transform: scaleX(1) translateX(0);
+          opacity: 1;
+      }
+    }

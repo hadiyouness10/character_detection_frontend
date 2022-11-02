@@ -216,7 +216,7 @@ function TrainingComponent(props) {
                 <span style={{marginLeft: 10}}>{item}</span>
             </div>
             ))}
-                <button onClick={() => onTrain()} style={{ float: 'right' }} className='btn btn-primary'>Train</button>
+                <button onClick={() => onTrain()} style={{ margin:'auto',marginTop:'15px'}} className='btn btn-primary'>Train</button>
             </div>
             
         </div>

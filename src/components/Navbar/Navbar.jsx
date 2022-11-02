@@ -17,7 +17,7 @@ export default  function Navbar(props) {
 
     const navigate = useNavigate();
 
-    const navigateTest = () => {
+    const navigatePredict = () => {
       // 👇️ navigate to /contacts
       navigate('/predict');
     };
@@ -36,7 +36,7 @@ export default  function Navbar(props) {
                   <a href="#" className="navbar-brand" id="refreshBtn"> Letter Detection</a>
                 </div>
                 <ul className="nav navbar-nav"> 
-                <li id='TestData' onClick={navigateTest}><a href="#">Test</a></li>
+                <li id='TestData' onClick={navigatePredict}><a href="#">Predict</a></li>
                 <li id='TrainData' onClick={navigateTrain}><a href="#">Train</a></li>
                 </ul>
 
@@ -50,6 +50,7 @@ export default  function Navbar(props) {
         <Routes>
         <Route path="/train_new_model" element={<Train/>} />
         <Route path="/predict" element={<Predict/>} />
+        <Route path="/" element={<Predict/>} />
         </Routes>
 
         </div>
