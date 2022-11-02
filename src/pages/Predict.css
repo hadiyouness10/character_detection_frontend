@@ -1,0 +1,38 @@
+.App {
+    justify-items: center;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  }
+  
+  .cardClass {
+    width: max-content;
+    margin: 1rem;
+    padding-inline: 0.5rem;
+    padding-bottom: 1rem;
+    max-height: 25rem;
+  }
+  
+  .cardBody {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    width: 20rem;
+    min-height: 20rem;
+    height: 100%;
+  }
+  
+  .credits {
+    margin-top: 2rem;
+  }
+  
+  .credits h4 {
+    margin-top: 1rem;
+    margin-left: 2rem;
+  }
+  .credits p {
+    margin-left: 4rem;
+  }
+  

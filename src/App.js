@@ -6,14 +6,12 @@ import TrainingCard from './components/Cards/TrainingCard';
 import Classifiers from './components/Classifiers/Classifiers'
 import Methods from './components/Methods/Methods';
 import TrainingComponent from './components/TrainingComponent/TrainingComponent';
+import Predict from './pages/Predict';
 
 function App() {
   return (
     <div className="app">
-      <Navbar/>
-      <Classifiers/>
-      <Methods/>
-      <TrainingComponent/>
+    <Navbar/>
   </div>
   );
 }
