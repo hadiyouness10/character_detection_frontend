@@ -8,6 +8,7 @@ import { Stage, Layer, Line, Rect, Circle, Group, Text } from 'react-konva';
 function TrainingComponent(props) {
 
     const [models, setModels] = useState([]);
+
     const [checked, setChecked] = useState([]);
     const [features, setFeatures] = useState(['pixels_per_segment', 'horizontal_histogram', 'vertical_histogram'])
     const [inputLines, setinputLines] = useState([
@@ -56,7 +57,8 @@ function TrainingComponent(props) {
             dash: 10,
             fill: 'white',
             picked: false,
-            name: 'knn'
+            name: 'knn',
+            w: 1,
         },
         {
             x: 300,
@@ -64,7 +66,8 @@ function TrainingComponent(props) {
             dash: 10,
             fill: 'white',
             picked: false, 
-            name: 'svm'
+            name: 'svm', 
+            w: 1,
         },
         {
             x: 500,
@@ -72,14 +75,16 @@ function TrainingComponent(props) {
             dash: 10,
             fill: 'white',
             picked: false, 
-            name: 'dt'
+            name: 'dt', 
+            w: 1
         }
     ]);
+
     function onDoubleClick(i) {
         console.log('double clicked' + i)
-        let currentClassifiers = classifiers.concat([]);
-        let currentinputLines = inputLines.concat([]);
-        let currentoutputLines = outputLines.concat([]);
+        let currentClassifiers = [...classifiers];
+        let currentinputLines = [...inputLines];
+        let currentoutputLines = [...outputLines];
         if (currentClassifiers[i]['picked']) {
             currentClassifiers[i]['dash'] = 10;
             currentClassifiers[i]['fill'] = 'white';
@@ -123,6 +128,8 @@ function TrainingComponent(props) {
             console.log(response);
         })
       }
+
+
     return (
         <div style={floatContainer}>
         <div style={floatChild}>
@@ -169,13 +176,13 @@ function TrainingComponent(props) {
                                 strokeWidth={3}
                                 dash={[classifier['dash'], classifier['dash']]}
                                 fill={classifier['fill']}
-                                onDblClick={()=>onDoubleClick(i)}
+                                    onDblClick={() => onDoubleClick(i)}
                                 /> 
                                 <Text   key={'text_'+i} text={classifier['name']}
                                         x={classifier['x']+35}
                                         y={classifier['y']+35}
                                         fontSize={20}
-                            />
+                                />
                             </Group>
  
                         ))}
@@ -220,6 +227,7 @@ function TrainingComponent(props) {
             ))}
                 <button onClick={() => onTrain()} style={{ margin:'auto',marginTop:'15px'}} className='btn btn-primary'>Train</button>
             </div>
+
             </div>
     );
  

@@ -79,7 +79,7 @@ function Methods({ chooseImage }) {
     }
     let json_image = {
       'image': base64, 
-      'model_version': 'knn'
+      'model_version': 'svm'
     }
       axios.post(backend + '/predict', json_image).then((response) => {
         console.log(response);
@@ -154,7 +154,7 @@ function Methods({ chooseImage }) {
                         key={i}
                         points={line.points}
                         stroke="black"
-                        strokeWidth={5}
+                        strokeWidth={20}
                         tension={0.5}
                         lineCap="round"
                         globalCompositeOperation={
