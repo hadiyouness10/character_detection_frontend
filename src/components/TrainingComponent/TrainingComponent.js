@@ -124,12 +124,13 @@ function TrainingComponent(props) {
         })
       }
     return (
-        <div >
+        <div style={floatContainer}>
+        <div style={floatChild}>
             <h4 style={{ marginLeft: 20 }}>Create your classifier</h4>
             <p style={{marginLeft: 20}}>Double click to choose or remove the classifier</p>
-            <div className='col-6' style={{width: '50%'}}>
+            <div>
             <Stage
-                width={800}
+                width={700}
                 height={500}
                 style={stageStyle}
                 >
@@ -207,8 +208,9 @@ function TrainingComponent(props) {
 
                         
             </Stage>
-            </div>
-            <div style={{ marginLeft: 20 }} className='col-2'>
+                </div>
+                </div>
+            <div style={floatChild} className='col-2'>
                 <h4>Choose your features</h4>
             {features.map((item, index) => (
             <div key={index}>
@@ -218,8 +220,7 @@ function TrainingComponent(props) {
             ))}
                 <button onClick={() => onTrain()} style={{ margin:'auto',marginTop:'15px'}} className='btn btn-primary'>Train</button>
             </div>
-            
-        </div>
+            </div>
     );
  
 }
@@ -227,7 +228,17 @@ export default TrainingComponent;
 
 
 const stageStyle = {
-    boxShadow: '0 20px 16px 0 rgba(0,0,0,0.2)',
     padding: '20',
-    margin: '20px'
-  }
+    margin: '10px',
+    boxShadow: '1px 2px 9px #F4AAB9',
+}
+  
+const floatContainer ={
+    padding: '20px'
+}
+
+const floatChild = {
+    width: '50%',
+    float: 'left',
+    padding: '20px',
+}  
