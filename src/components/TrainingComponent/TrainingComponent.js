@@ -11,6 +11,8 @@ function TrainingComponent(props) {
     const [models, setModels] = useState([]);
 
     const [checked, setChecked] = useState([]);
+    const [isTraining, setTraining] = useState(false);
+
     const [features, setFeatures] = useState(['pixels_per_segment', 'horizontal_histogram', 'vertical_histogram'])
 
 
@@ -163,6 +165,7 @@ function TrainingComponent(props) {
         console.log(updatedList);
       };
     function onTrain() {
+        setTraining(true)
         let finalClassifiers = [...classifiers];
         finalClassifiers = finalClassifiers.filter(classifier => classifier['picked'] === true)
         var models = []
@@ -170,12 +173,12 @@ function TrainingComponent(props) {
             models[i] = {'name':classifier['name'], 'weight':1}
             )
         )
-        console.log(checked);
-        console.log(models)
-        let data = {'models': models, 'features':checked}
-        axios.post(backend + '/train_new_model', data).then((response) => {
-            console.log(response);
-        })
+        if(models.length>0){
+            let data = {'models': models, 'features':checked}
+            axios.post(backend + '/train_new_model', data).then((response) => {
+                setTraining(false)
+            })
+        }
       }
 
 
@@ -296,6 +299,7 @@ function TrainingComponent(props) {
                     :''
             ))}
 
+                <button disabled={isTraining ? true : false} onClick={() => onTrain()} style={{ margin:'auto',marginTop:'15px'}} className='btn btn-primary'>Train</button>
             </div>
 
             </div>
