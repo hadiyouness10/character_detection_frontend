@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Card from "@material-ui/core/Card";
-import { Button } from "@material-ui/core";
 import "./Classifier.css";
 
 function Classifier(props) {
@@ -21,7 +19,7 @@ function Classifier(props) {
       })}
   </div>
     <div className="card-actions">
-      <button type='button' className="btn btn-warning" style={{float: 'right', margin: 20}}>More Info</button>
+      <button type='button' className="btn btn-warning" style={{marginLeft:'45%'}}>More Info</button>
     </div>
   </div>
   );
