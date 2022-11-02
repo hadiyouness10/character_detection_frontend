@@ -4,6 +4,7 @@ import {backend} from "../../config"
 // import Classifier from '../Classifier/Classifier';
 import axios from 'axios';
 import { Stage, Layer, Line, Rect, Circle, Group, Text } from 'react-konva';
+import Form from 'react-bootstrap/Form';
 
 function TrainingComponent(props) {
 
@@ -17,6 +18,18 @@ function TrainingComponent(props) {
         axios.get(backend + '/features').then((response) => {
             setFeatures(response.data.features);
     })
+    }
+
+    function changeWeight(item, target) {
+        console.log(item);
+        console.log(target.target.value);
+        let currentClassifiers = [...classifiers];
+        for (var i = 0; i < currentClassifiers.length; i++){
+            if (currentClassifiers[i] === item) {
+                currentClassifiers[i]['w'] = target.target.value;
+            }
+        }
+        setClassifiers(currentClassifiers);
     }
 
     const [inputLines, setinputLines] = useState([
@@ -67,6 +80,7 @@ function TrainingComponent(props) {
             picked: false,
             name: 'knn',
             w: 1,
+            features: [],
         },
         {
             x: 300,
@@ -76,6 +90,7 @@ function TrainingComponent(props) {
             picked: false, 
             name: 'svm', 
             w: 1,
+            features: []
         },
         {
             x: 500,
@@ -84,10 +99,29 @@ function TrainingComponent(props) {
             fill: 'white',
             picked: false, 
             name: 'dt', 
-            w: 1
+            w: 1, 
+            features: []
         }
     ]);
-
+    var featuresRender = [];
+    var featuresColumn = [];
+    for (var i = 0; i < features.length; i++){
+        featuresColumn.push(
+            <div  key={i}>
+            <input value={features[i]} type="checkbox"/>
+                <span  style={{ marginLeft: 10, display: 'inline' }}>{features[i]}</span>
+        </div>
+        );
+        console.log(featuresColumn)
+        if ((i+1) % 5 === 0) {
+            featuresRender.push(
+                <div style={floatChildFeature}>
+                {featuresColumn}
+                </div>
+            )
+            featuresColumn = [];
+        }
+    }
     function onDoubleClick(i) {
         console.log('double clicked' + i)
         let currentClassifiers = [...classifiers];
@@ -230,15 +264,38 @@ function TrainingComponent(props) {
             </Stage>
                 </div>
                 </div>
-            <div style={floatChild} className='col-2'>
+            {/* <div style={floatChild} className='col-2'>
                 <h4>Choose your features</h4>
             {features.map((item, index) => (
             <div key={index}>
-                <input value={item} type="checkbox" onChange={handleCheck}/>
+                    <input value={item} type="checkbox" style={{checked: index===0? 'True': 'False' }} onChange={handleCheck}/>
                 <span style={{marginLeft: 10}}>{item}</span>
             </div>
             ))}
                 <button onClick={() => onTrain()} style={{ margin:'auto',marginTop:'15px'}} className='btn btn-primary'>Train</button>
+            </div> */}
+            <div style={{marginTop: '20px'}}>
+                <h4>Chosen Classifiers</h4>
+                <p>Pick a classifier to view details here</p>
+                {classifiers.map((item, index) => (
+                item['picked']?
+                    <div>
+                        <h4>{item.name}</h4>
+                        <Form>
+      <Form.Group className="mb-3" controlId="formBasicEmail">
+        <Form.Label>Current Weight</Form.Label>
+                                    <Form.Control type="weight" value={item.w} onChange={(i) => changeWeight(item, i)} />
+
+                            </Form.Group>
+                        </Form>
+            <h5>Features:</h5>
+                    <div>
+            {featuresRender}
+                        </div>
+                    </div>
+                    :''
+            ))}
+
             </div>
 
             </div>
@@ -255,11 +312,17 @@ const stageStyle = {
 }
   
 const floatContainer ={
-    padding: '20px'
+    padding: '20px', 
+    display: 'flex'
 }
 
 const floatChild = {
     width: '50%',
     float: 'left',
     padding: '20px',
+}  
+const floatChildFeature = {
+    width: '50%',
+    float: 'left',
+    flex: 1
 }  
