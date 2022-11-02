@@ -119,7 +119,7 @@ function TrainingComponent(props) {
         let finalClassifiers = [...classifiers];
         finalClassifiers = finalClassifiers.filter(classifier => classifier['picked'] === true)
         console.log(finalClassifiers);
-        axios.post(backend + '/train_new_model').then((response) => {
+        axios.post(backend + '/train_new_model', finalClassifiers).then((response) => {
             console.log(response);
         })
       }
