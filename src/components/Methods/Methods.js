@@ -5,7 +5,7 @@ import { backend } from "../../config";
 import exportAsImage from "../../utils/exportAsImage";
 import "../Methods/Methods.css";
 
-function Methods({ chooseImage }) {
+function Methods({ pickedClassifier }) {
 
 
   const [image, setImage] = useState();
@@ -13,7 +13,9 @@ function Methods({ chooseImage }) {
   const hiddenFileInput = React.useRef(null);
   const exportRef = React.useRef();
   useEffect(() => {
-    console.log("Hello")
+    console.log(pickedClassifier==='');
+    console.log(lines.length === 0)
+    console.log((pickedClassifier === '' || lines === []));
 }, [draw])
 
   const handleClick = (event) => {
@@ -103,7 +105,6 @@ function Methods({ chooseImage }) {
       }
 
       setImage(URL.createObjectURL(hiddenFileInput.current.files[0]));
-      chooseImage(URL.createObjectURL(hiddenFileInput.current.files[0]))
     }
   }
   const getBase64FromUrl = async (url) => {
@@ -166,7 +167,7 @@ function Methods({ chooseImage }) {
           </Stage>
           : ''}
       </div>
-      <button onClick={handlePredict} className="btn btn-secondary button" style={{marginLeft:'45%' , fontSize: '30px'}}>Predict</button>
+      <button onClick={handlePredict} disabled={(pickedClassifier.length === 0 || (lines.length ===0 && image === undefined) )? true: false} className="btn btn-secondary button" style={{marginLeft:'45%' , fontSize: '30px'}}>Predict</button>
     </div>
   );
 

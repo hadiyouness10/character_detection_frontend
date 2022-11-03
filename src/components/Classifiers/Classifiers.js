@@ -4,7 +4,7 @@ import {backend} from "../../config"
 import Classifier from '../Classifier/Classifier';
 import axios from 'axios'
 
-function Classifiers(props) {
+function Classifiers({pickClassifier}) {
 
     const [models, setModels] = useState([]);
 
@@ -17,17 +17,24 @@ function Classifiers(props) {
             console.log(response)
             setModels(response.data.available_models);
     })
-}
+    }
+    
+    function pickClassifierFunction(model) {
+        pickClassifier(model)
+    }
 
 
- return (
+    return (
+     <div>
+
     <div className ="cards-row" >
         {Object.keys(models).map((model)=>{
         
-        return <Classifier modelName = {model} features = {models[model]['features']} testing_accuracy={models[model]['testing_accuracy']} traning_accuracy={models[model]['training_accuracy']} training={models[model]['training']} />
+        return <div onClick={()=> pickClassifierFunction(model)}><Classifier  modelName = {model} features = {models[model]['features']} testing_accuracy={models[model]['testing_accuracy']} traning_accuracy={models[model]['training_accuracy']} training={models[model]['training']} /></div>
 
         })}
-    </div>
+            </div>
+     </div>
  );
  
 }

@@ -105,25 +105,28 @@ function TrainingComponent(props) {
             features: []
         }
     ]);
-    var featuresRender = [];
-    var featuresColumn = [];
-    for (var i = 0; i < features.length; i++){
-        featuresColumn.push(
-            <div  key={i}>
-            <input value={features[i]} type="checkbox"/>
-                <span  style={{ marginLeft: 10, display: 'inline' }}>{features[i]}</span>
-        </div>
-        );
-        console.log(featuresColumn)
-        if ((i+1) % 5 === 0) {
-            featuresRender.push(
-                <div style={floatChildFeature}>
-                {featuresColumn}
-                </div>
-            )
-            featuresColumn = [];
+    function renderFeatures(item) {
+        var featuresRender = [];
+        var featuresColumn = [];
+        for (var i = 0; i < features.length; i++){
+            featuresColumn.push(
+                <div  key={i}>
+                <input value={features[i]} onChange={(e)=>handleCheck(item, e)} type="checkbox"/>
+                    <span  style={{ marginLeft: 10, display: 'inline' }}>{features[i]}</span>
+            </div>
+            );
+            if ((i+1) % 5 === 0) {
+                featuresRender.push(
+                    <div style={floatChildFeature}>
+                    {featuresColumn}
+                    </div>
+                )
+                featuresColumn = [];
+            }
         }
+        return featuresRender;
     }
+
     function onDoubleClick(i) {
         console.log('double clicked' + i)
         let currentClassifiers = [...classifiers];
@@ -151,30 +154,40 @@ function TrainingComponent(props) {
     }
     useEffect(() => {
         getFeatures();
-        console.log('rerendering')
     }, [classifiers])
 
-    const handleCheck = (event) => {
-        var updatedList = [...checked];
+    const handleCheck = (item, event) => {
+        console.log(item, event.target.value, event.target.checked);
+        var updatedList = [...item['features']];
         if (event.target.checked) {
-          updatedList = [...checked, event.target.value];
+          updatedList = [...item['features'], event.target.value];
         } else {
-          updatedList.splice(checked.indexOf(event.target.value), 1);
+          updatedList.splice(updatedList.indexOf(event.target.value), 1);
         }
-        setChecked(updatedList);
-        console.log(updatedList);
-      };
+        let currentClassifiers = [...classifiers];
+        for (var i = 0; i < currentClassifiers.length; i++){
+            if (currentClassifiers[i] === item){
+                currentClassifiers[i]['features'] = updatedList;
+            }
+        }
+        setClassifiers(currentClassifiers);
+        console.log(currentClassifiers);
+    };
+    
+
+
+
     function onTrain() {
         setTraining(true)
         let finalClassifiers = [...classifiers];
         finalClassifiers = finalClassifiers.filter(classifier => classifier['picked'] === true)
         var models = []
         finalClassifiers.map((classifier,i) => (
-            models[i] = {'name':classifier['name'], 'weight':1}
+            models[i] = {'name':classifier['name'], 'weight':classifier['w'], 'features': classifier['features']}
             )
         )
         if(models.length>0){
-            let data = {'models': models, 'features':checked}
+            let data = {'models': models}
             axios.post(backend + '/train_new_model', data).then((response) => {
                 setTraining(false)
             })
@@ -293,7 +306,7 @@ function TrainingComponent(props) {
                         </Form>
             <h5>Features:</h5>
                     <div>
-            {featuresRender}
+            {renderFeatures(item)}
                         </div>
                     </div>
                     :''
