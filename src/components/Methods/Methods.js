@@ -142,7 +142,7 @@ function Methods({ pickedClassifier }) {
         {draw ?
           <Stage
             height={300}
-            width={430}
+            width={880}
             onMouseDown={handleMouseDown}
                 onMousemove={handleMouseMove}
                 onMouseup={handleMouseUp}
@@ -179,7 +179,7 @@ export default Methods;
 const stageStyle = {
   padding: '20px',
   margin: '10px',
-  width: '30%',
+  width: '60%',
   boxShadow: '1px 2px 9px #F4AAB9',
   backgroundColor: 'white'
 }
