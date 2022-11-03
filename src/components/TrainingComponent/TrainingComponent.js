@@ -105,13 +105,13 @@ function TrainingComponent(props) {
             features: []
         }
     ]);
-    function renderFeatures(item) {
+    function renderFeatures() {
         var featuresRender = [];
         var featuresColumn = [];
         for (var i = 0; i < features.length; i++){
             featuresColumn.push(
                 <div  key={i}>
-                <input value={features[i]} onChange={(e)=>handleCheck(item, e)} type="checkbox"/>
+                <input value={features[i]} onChange={(e)=>handleCheck(e)} type="checkbox"/>
                     <span  style={{ marginLeft: 10, display: 'inline' }}>{features[i]}</span>
             </div>
             );
@@ -156,22 +156,15 @@ function TrainingComponent(props) {
         getFeatures();
     }, [classifiers])
 
-    const handleCheck = (item, event) => {
-        console.log(item, event.target.value, event.target.checked);
-        var updatedList = [...item['features']];
+    const handleCheck = (event) => {
+        var updatedList = [...checked];
         if (event.target.checked) {
-          updatedList = [...item['features'], event.target.value];
+          updatedList = [...checked, event.target.value];
         } else {
           updatedList.splice(updatedList.indexOf(event.target.value), 1);
         }
-        let currentClassifiers = [...classifiers];
-        for (var i = 0; i < currentClassifiers.length; i++){
-            if (currentClassifiers[i] === item){
-                currentClassifiers[i]['features'] = updatedList;
-            }
-        }
-        setClassifiers(currentClassifiers);
-        console.log(currentClassifiers);
+        setChecked(updatedList);
+        console.log(updatedList);
     };
     
 
@@ -183,11 +176,11 @@ function TrainingComponent(props) {
         finalClassifiers = finalClassifiers.filter(classifier => classifier['picked'] === true)
         var models = []
         finalClassifiers.map((classifier,i) => (
-            models[i] = {'name':classifier['name'], 'weight':classifier['w'], 'features': classifier['features']}
+            models[i] = {'name':classifier['name'], 'weight':classifier['w']}
             )
         )
         if(models.length>0){
-            let data = {'models': models}
+            let data = { 'models': models, 'features': checked };
             axios.post(backend + '/train_new_model', data).then((response) => {
                 setTraining(false)
             })
@@ -290,7 +283,11 @@ function TrainingComponent(props) {
             ))}
                 <button onClick={() => onTrain()} style={{ margin:'auto',marginTop:'15px'}} className='btn btn-primary'>Train</button>
             </div> */}
-            <div style={{marginTop: '20px'}}>
+            <div style={{ marginTop: '20px' }}>
+            <h5>Features:</h5>
+                    <div>
+            {renderFeatures()}
+                        </div>
                 <h4>Chosen Classifiers</h4>
                 <p>Pick a classifier to view details here</p>
                 {classifiers.map((item, index) => (
@@ -304,10 +301,6 @@ function TrainingComponent(props) {
 
                             </Form.Group>
                         </Form>
-            <h5>Features:</h5>
-                    <div>
-            {renderFeatures(item)}
-                        </div>
                     </div>
                     :''
             ))}

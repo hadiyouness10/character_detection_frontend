@@ -25,13 +25,6 @@ body {
 }
 
 .card {
-    display: inline-block;
-    width: 450px;
-    height: 200px;
-    /* box-sizing: border-box; */
-    box-shadow: 2px 2px 25px 0px rgba(0, 0, 0, 0.7);
-    /* border-radius: 3px; */
-    margin: 1em 1.5%;
     animation: scl 0.5s ease-in-out;
     transform-origin: left center;
     background-color: #fff;
@@ -46,7 +39,6 @@ body {
     font-size: 1.5em;
     background-color: white;
     border-radius: 30px;
-
 }
 
 .card-desc {

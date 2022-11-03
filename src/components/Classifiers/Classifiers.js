@@ -7,10 +7,9 @@ import axios from 'axios'
 function Classifiers({pickClassifier}) {
 
     const [models, setModels] = useState([]);
-
     useEffect(() => {
         getModels();
-    }, [])
+    }, [pickClassifier])
 
     function getModels() {
         axios.get(backend + '/info').then((response) => {
@@ -20,17 +19,21 @@ function Classifiers({pickClassifier}) {
     }
     
     function pickClassifierFunction(model) {
-        pickClassifier(model)
+        pickClassifier(model);
+
+        console.log('current checked model' +  model)
     }
 
 
     return (
      <div>
 
-    <div className ="cards-row" >
+    <div style={floatContainer} >
         {Object.keys(models).map((model)=>{
         
-        return <div onClick={()=> pickClassifierFunction(model)}><Classifier  modelName = {model} features = {models[model]['features']} testing_accuracy={models[model]['testing_accuracy']} traning_accuracy={models[model]['training_accuracy']} training={models[model]['training']} /></div>
+            return <div style={floatChild} onClick={() => pickClassifierFunction(model)}>
+                <Classifier modelName={model} features={models[model]['features']} testing_accuracy={models[model]['testing_accuracy']} traning_accuracy={models[model]['training_accuracy']} training={models[model]['training']} />
+            </div>
 
         })}
             </div>
@@ -39,3 +42,12 @@ function Classifiers({pickClassifier}) {
  
 }
 export default Classifiers;  
+const floatContainer ={
+    padding: '20px',
+}
+
+const floatChild ={
+    width: '33%',
+    float: 'left',
+    padding: '20px',
+}  
