@@ -1,30 +1,30 @@
 .myImage {
     width: 100% auto;
     max-height: 13rem;
-  }
-  
-  .predictionButtons {
+}
+
+.predictionButtons {
     position: absolute;
     bottom: 0;
-  }
-  
-  .predictionResult {
+}
+
+.predictionResult {
     position: absolute;
     height: 80%;
     display: flex;
     justify-content: center;
     align-items: center;
-  }
-  
-  .predictionText {
+}
+
+.predictionText {
     color: red;
-  }
-  
-  body {
+}
+
+body {
     background-color: #e7f3ff;
-  }
-  
-  .card {
+}
+
+.card {
     display: inline-block;
     width: 500px;
     height: 200px;
@@ -35,34 +35,34 @@
     animation: scl 0.5s ease-in-out;
     transform-origin: left center;
     background-color: #fff;
-  }
-  
-  .checked{
+}
+
+.checked {
     background-color: rgb(99, 99, 221);
-  }
-  .card-title {
+}
+
+.card-title {
     padding-bottom: 0.5em;
     padding-left: 0.5em;
     color: rgb(0, 0, 0);
     font-size: 2em;
     background-color: white;
-  }
-  
-  .card-desc {
+}
+
+.card-desc {
     padding: 0 1em 1em 1em;
     border-bottom: 1px solid rgba(128, 128, 128, 0.3);
     height: 80px;
     overflow: auto;
     text-align: justify;
-    background-color:white ;
-  
-  }
-  
-  .card-actions {
-    background-color:rgb(242, 244, 255) ;
-  
-  }
-  .card-action-readMore {
+    background-color: white;
+}
+
+.card-actions {
+    background-color: rgb(242, 244, 255);
+}
+
+.card-action-readMore {
     margin: 1em 0 1em 1em;
     height: 3em;
     width: 8em;
@@ -74,76 +74,100 @@
     overflow: hidden;
     outline: none;
     border-radius: 2px;
-  }
-  .card-action-readMore:hover {
+}
+
+.card-action-readMore:hover {
     background: rgba(60, 58, 192, 0.8);
     transition: all 0.1s ease-in;
-  }
-  .card:hover {
+}
+
+.card:hover {
     box-shadow: 7px 7px 15px 2px rgba(0, 0, 0, 0.5);
     transition: box-shadow 0.3s ease-in;
     cursor: pointer;
-  }
-  
-  .ripple {
+}
+
+.ripple {
     border-radius: 50%;
     background: #ff8ec7;
     position: absolute;
     transform: scale(0);
     opacity: 1;
     animation: ripple 0.4s linear;
-  }
-  
-  @keyframes ripple {
+}
+
+@keyframes ripple {
     to {
-      transform: scale(2.5);
-      opacity: 0;
+        transform: scale(2.5);
+        opacity: 0;
     }
-  }
-  @keyframes scl {
+}
+
+@keyframes scl {
     0% {
-      opacity: 0;
-      transform: scaleX(0.9) translateX(-50px);
+        opacity: 0;
+        transform: scaleX(0.9) translateX(-50px);
     }
     75% {
-      opacity: 0.2;
+        opacity: 0.2;
     }
     100% {
-      transform: scaleX(1) translateX(0);
-      opacity: 1;
+        transform: scaleX(1) translateX(0);
+        opacity: 1;
     }
-  }
+}
 
 .cards-row {
     margin: 0px auto;
     flex-direction: column;
+}
+
+.button {
+    display: inline-block;
+    margin: 1em 1.5%;
+    animation: scl 0.5s ease-in-out;
+    transform-origin: left center;
+}
+
+@keyframes ripple {
+    to {
+        transform: scale(2.5);
+        opacity: 0;
     }
+}
 
-    .button {
-      display: inline-block;
-      margin: 1em 1.5%;
-      animation: scl 0.5s ease-in-out;
-      transform-origin: left center;
-
-  }
-
-    @keyframes ripple {
-      to {
-          transform: scale(2.5);
-          opacity: 0;
-      }
-  }
-  
-  @keyframes scl {
-      0% {
-          opacity: 0;
-          transform: scaleX(0.9) translateX(-50px);
-      }
-      75% {
-          opacity: 0.2;
-      }
-      100% {
-          transform: scaleX(1) translateX(0);
-          opacity: 1;
-      }
+@keyframes scl {
+    0% {
+        opacity: 0;
+        transform: scaleX(0.9) translateX(-50px);
     }
+    75% {
+        opacity: 0.2;
+    }
+    100% {
+        transform: scaleX(1) translateX(0);
+        opacity: 1;
+    }
+}
+
+.Row {
+    display: table;
+    width: 100%;
+    /*Optional*/
+    table-layout: fixed;
+    /*Optional*/
+    border-spacing: 10px;
+    /*Optional*/
+}
+
+.Column {
+    display: table-cell;
+    background-color: red;
+    /*Optional*/
+}
+
+#inline {
+    width: 100%;
+    height: auto;
+    display: flex;
+}

@@ -7,16 +7,27 @@ import "../Methods/Methods.css";
 
 function Methods({ pickedClassifier }) {
 
-
+  const [features, setFeatures] = useState([]);
+  const [checked, setChecked] = useState('');
+  const [result, setResult] = useState('');
   const [image, setImage] = useState();
-  const [draw, setDraw] = useState();
+  const [draw, setDraw] = useState(true);
   const hiddenFileInput = React.useRef(null);
   const exportRef = React.useRef();
+  const [models, setModels] = useState([]);
+
+function getModels() {
+  axios.get(backend + '/info').then((response) => {
+    let available_models = response.data.available_models;
+        console.log(available_models)
+        setModels(available_models);
+})
+}
   useEffect(() => {
-    console.log(pickedClassifier==='');
-    console.log(lines.length === 0)
-    console.log((pickedClassifier === '' || lines === []));
-}, [draw])
+    console.log('rerendering')
+    getModels();
+    console.log('hello')
+}, [draw, result])
 
   const handleClick = (event) => {
     setDraw(false);
@@ -35,7 +46,8 @@ function Methods({ pickedClassifier }) {
       const pos = e.target.getStage().getPointerPosition();
       setLines([...lines, { points: [pos.x, pos.y] }]);
   };
-  
+
+
   const handleMouseMove = (e) => {
       // no drawing - skipping
       if (!isDrawing.current) {
@@ -81,10 +93,11 @@ function Methods({ pickedClassifier }) {
     }
     let json_image = {
       'image': base64, 
-      'model_version': 'svm'
+      'model_version': checked
     }
       axios.post(backend + '/predict', json_image).then((response) => {
         console.log(response);
+        setResult('Hdfs');
     })
   }
   async function blobToBase64(blob) {
@@ -107,6 +120,16 @@ function Methods({ pickedClassifier }) {
       setImage(URL.createObjectURL(hiddenFileInput.current.files[0]));
     }
   }
+
+  function pickClassifierFunction(model) {
+   setChecked(model)
+  }
+  
+  function checkClassifier() {
+    // console.log('setting check to true');
+    // console.log(props.modelName);
+    // setChecked(true);
+  }
   const getBase64FromUrl = async (url) => {
     const data = await fetch(url);
     const blob = await data.blob();
@@ -120,7 +143,41 @@ function Methods({ pickedClassifier }) {
     });
   };
   return (
-    <div>
+    <div style={{justifyContent: 'center', alignItems: 'center', marginLeft: '20px'}}>
+      <div className="row">
+              {Object.keys(models).map((model)=>{
+        
+                return <div className="col-4" style={floatChild} onClick={() => pickClassifierFunction(model)}>
+                <div className="card" onClick={() => checkClassifier()} style={{ width: '450px', height: '200px', borderStyle: checked === model? 'solid': 'initial',  boxShadow: '2px 2px 25px 2px rgba(0, 0, 0, 0.7)', borderWidth: '3px', margin: '1em 1.5%', borderColor: 'green' }}>
+    <div style={{fontSize: 18, padding: 10}}>
+          Model: {model}
+    </div>
+    <div className="card-desc">
+      Features: {models[model]['features'].map(feature => {
+        return (
+          <p>{feature}</p>
+        )
+      })}
+  </div>
+                    <div className="card-actions">
+                      <div  id="inline">
+                        <div>
+                          <p>Evaluation Score: {models[model]['training_accuracy']}</p>
+                          <p>Testing Score: {models[model]['testing_accuracy']}</p>
+                        </div>
+                        <div style={{paddingLeft: '150px', paddingTop: '20px'}}>
+                        <button type='button' className="btn btn-warning" style={{marginLeft:'45%'}}>More Info</button>
+
+                          </div>
+                        </div>
+
+                      
+    </div>
+  </div>
+        </div>
+
+    })}
+</div>
     <div style={{alignContent: 'center', display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: 50}}>
                 <input
           type="file"
@@ -167,7 +224,15 @@ function Methods({ pickedClassifier }) {
           </Stage>
           : ''}
       </div>
-      <button onClick={handlePredict} disabled={(pickedClassifier.length === 0 || (lines.length ===0 && image === undefined) )? true: false} className="btn btn-secondary button" style={{marginLeft:'45%' , fontSize: '30px'}}>Predict</button>
+      <button onClick={handlePredict} disabled={(checked.length === 0 || (lines.length === 0 && image === undefined)) ? true : false} className="btn btn-secondary button" style={{ marginLeft: '47%', fontSize: '30px' }}>Predict</button>
+      {result.length > 0 ?
+        <div style={{justifyContent: 'center', alignItems: 'center', display: 'flex', fontSize: '30px'}}>
+          Your {result.length > 1 ? 'word' : 'letter'} is:&nbsp; <strong>{result}</strong>
+        </div> : ''}
+      <hr></hr>
+      <hr></hr>
+      <hr></hr>
+
     </div>
   );
 
@@ -183,3 +248,12 @@ const stageStyle = {
   boxShadow: '1px 2px 9px #F4AAB9',
   backgroundColor: 'white'
 }
+// const floatContainer ={
+//     padding: '20px',
+// }
+
+const floatChild ={
+    // width: '33%',
+    float: 'left',
+  paddingLeft: '20px',
+}  

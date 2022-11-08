@@ -20,11 +20,11 @@ function Predict() {
   return (
     <div className="app">
       <div style={{display: 'block', justifyContent: 'center', alignItems: 'center'}}>
-      <Classifiers pickClassifier={pickClassifier} />
+      {/* <Classifiers pickClassifier={pickClassifier} /> */}
 
       </div>
 
-      <div style={{ display: 'block', display: 'table', marginLeft: 'auto', marginRight: 'auto', justifyContent: 'center', width: '50%' }}>
+      <div >
 
       <Methods pickedClassifier={pickedClassifier} />
 
