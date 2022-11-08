@@ -95,9 +95,11 @@ function getModels() {
       'image': base64, 
       'model_version': checked
     }
-      axios.post(backend + '/predict', json_image).then((response) => {
+    axios.post(backend + '/predict', json_image).then((response) => {
+        console.log('response')
         console.log(response);
-        setResult('Hdfs');
+
+        setResult(response.data.word);
     })
   }
   async function blobToBase64(blob) {
@@ -162,8 +164,8 @@ function getModels() {
                     <div className="card-actions">
                       <div  id="inline">
                         <div>
-                          <p>Evaluation Score: {models[model]['training_accuracy']}</p>
-                          <p>Testing Score: {models[model]['testing_accuracy']}</p>
+                          <p>Evaluation Score: {models[model]['eval_accuracy']}</p>
+                          <p>Testing Score: {models[model]['test_score']}</p>
                         </div>
                         <div style={{paddingLeft: '150px', paddingTop: '20px'}}>
                         <button type='button' className="btn btn-warning" style={{marginLeft:'45%'}}>More Info</button>
@@ -227,7 +229,7 @@ function getModels() {
       <button onClick={handlePredict} disabled={(checked.length === 0 || (lines.length === 0 && image === undefined)) ? true : false} className="btn btn-secondary button" style={{ marginLeft: '47%', fontSize: '30px' }}>Predict</button>
       {result.length > 0 ?
         <div style={{justifyContent: 'center', alignItems: 'center', display: 'flex', fontSize: '30px'}}>
-          Your {result.length > 1 ? 'word' : 'letter'} is:&nbsp; <strong>{result}</strong>
+          The predicted {result.length > 1 ? 'word' : 'letter'} is:&nbsp; <strong>{result}</strong>
         </div> : ''}
       <hr></hr>
       <hr></hr>
@@ -245,7 +247,6 @@ const stageStyle = {
   padding: '20px',
   margin: '10px',
   width: '60%',
-  boxShadow: '1px 2px 9px #F4AAB9',
   backgroundColor: 'white'
 }
 // const floatContainer ={
