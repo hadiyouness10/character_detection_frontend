@@ -11,6 +11,8 @@ function TrainingComponent(props) {
     const [models, setModels] = useState([]);
 
     const [checked, setChecked] = useState([]);
+    const [english, setEnglish] = useState(false);
+    const [arabic, setArabic] = useState(false);
     const [isTraining, setTraining] = useState(false);
 
     const [features, setFeatures] = useState(['pixels_per_segment', 'horizontal_histogram', 'vertical_histogram'])
@@ -172,6 +174,7 @@ function TrainingComponent(props) {
 
     function onTrain() {
         setTraining(true)
+
         let finalClassifiers = [...classifiers];
         finalClassifiers = finalClassifiers.filter(classifier => classifier['picked'] === true)
         var models = []
@@ -180,7 +183,7 @@ function TrainingComponent(props) {
             )
         )
         if(models.length>0){
-            let data = { 'models': models, 'features': checked };
+            let data = { 'models': models, 'features': checked, 'english': english, 'arabic': arabic };
             axios.post(backend + '/train_new_model', data).then((response) => {
                 setTraining(false)
             })
@@ -289,7 +292,13 @@ function TrainingComponent(props) {
             {renderFeatures()}
                         </div>
                 <h4>Chosen Classifiers</h4>
+                <div>
                 <p>Pick a classifier to view details here</p>
+                <input onClick={()=>setEnglish(!english)} id='english' name='English' style={{}} type={'checkbox'}/>
+                <label style={{marginLeft: 10}} for="English">English</label><br/>
+                <input onClick={()=>setArabic(!arabic)} id='arabic' name='Arabi' style={{}} type={'checkbox'}/>
+                <label style={{marginLeft: 10}} for="English">Arabic</label><br/>
+                </div>
                 {classifiers.map((item, index) => (
                 item['picked']?
                     <div>
