@@ -4,7 +4,7 @@ import { Layer, Line, Stage } from "react-konva";
 import { backend } from "../../config";
 import exportAsImage from "../../utils/exportAsImage";
 import "../Methods/Methods.css";
-
+import TranslateDropdown from '../Language/TranslateDropdown'
 function Methods({ pickedClassifier }) {
 
   const [features, setFeatures] = useState([]);
@@ -231,6 +231,10 @@ function getModels() {
         <div style={{justifyContent: 'center', alignItems: 'center', display: 'flex', fontSize: '30px'}}>
           The predicted {result.length > 1 ? 'word' : 'letter'} is:&nbsp; <strong>{result}</strong>
         </div> : ''}
+      <div style={{ justifyContent: 'center', alignItems: 'center', display: 'flex', fontSize: '18px' }}>
+      <TranslateDropdown/>
+
+      </div>
       <hr></hr>
       <hr></hr>
       <hr></hr>
