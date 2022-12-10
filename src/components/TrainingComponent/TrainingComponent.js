@@ -4,7 +4,7 @@ import {backend} from "../../config"
 // import Classifier from '../Classifier/Classifier';
 import axios from 'axios';
 import { Stage, Layer, Line, Rect, Circle, Group, Text } from 'react-konva';
-import Form from 'react-bootstrap/Form';
+import { Form, Button, Dropdown} from 'react-bootstrap';
 
 function TrainingComponent(props) {
 
@@ -14,6 +14,8 @@ function TrainingComponent(props) {
     const [english, setEnglish] = useState(false);
     const [arabic, setArabic] = useState(false);
     const [isTraining, setTraining] = useState(false);
+    const [showForm, setShowForm] = useState({});
+    const [activationFunctions, setActivationFunctions] = useState({});
 
     const [features, setFeatures] = useState(['pixels_per_segment', 'horizontal_histogram', 'vertical_histogram'])
 
@@ -25,8 +27,6 @@ function TrainingComponent(props) {
     }
 
     function changeWeight(item, target) {
-        console.log(item);
-        console.log(target.target.value);
         let currentClassifiers = [...classifiers];
         for (var i = 0; i < currentClassifiers.length; i++){
             if (currentClassifiers[i] === item) {
@@ -36,10 +36,65 @@ function TrainingComponent(props) {
         setClassifiers(currentClassifiers);
     }
 
+
+    function handleAddLayer(item) {
+        console.log(activationFunctions)
+        let currentClassifiers = [...classifiers];
+        for (var i = 0; i < currentClassifiers.length; i++){
+            if (currentClassifiers[i] === item) {
+                currentClassifiers[i]['layers'].push(currentClassifiers[i]['layers'].length >0 ? parseInt(currentClassifiers[i]['layers'].slice(-1))+1: 0);
+            }
+        }
+
+        let key = item['name'];
+        let value = true
+
+        setShowForm({
+            ...showForm,
+            [key]: value,
+        });
+        };
+
+    const handleActivationChange = (item,index, activation) => {
+        let currentClassifiers = [...classifiers];
+        for (var i = 0; i < currentClassifiers.length; i++){
+            if (currentClassifiers[i] === item) {
+                currentClassifiers[i]['activation_functions'].splice(index, 1, activation);
+                let key = item['name'];
+                let keyinner = index
+                let value = activation
+                if(Object.keys(activationFunctions).length === 0){
+                    setActivationFunctions({
+                        [key]: {
+                            ...activationFunctions[key],
+                            [keyinner]:value
+    
+                        },
+                    })
+                }else{
+                setActivationFunctions({
+                    ...activationFunctions,
+                    [key]: {
+                        ...activationFunctions[key],
+                        [keyinner]:value
+
+                    },
+                })
+            }
+            }
+        }
+        };
+
+
     const [inputLines, setinputLines] = useState([
         {
             startingPoint: [350, 50],
-            endingPoint: [150, 200],
+            endingPoint: [70, 200],
+            dash: 10
+        },
+        {
+            startingPoint: [350, 50],
+            endingPoint: [210, 200],
             dash: 10
         },
         {
@@ -50,7 +105,13 @@ function TrainingComponent(props) {
         },
         {
             startingPoint: [350, 50],
-            endingPoint: [550, 200],
+            endingPoint: [490, 200],
+            dash: 10
+
+        }, 
+        {
+            startingPoint: [350, 50],
+            endingPoint: [640, 200],
             dash: 10
 
         }]);
@@ -58,7 +119,13 @@ function TrainingComponent(props) {
         const [outputLines, setoutputLines] = useState([
         {
             startingPoint: [350, 450],
-            endingPoint: [150, 300],
+            endingPoint: [60, 300],
+            dash: 10
+
+        },
+        {
+            startingPoint: [350, 450],
+            endingPoint: [210, 300],
             dash: 10
 
         },
@@ -70,14 +137,20 @@ function TrainingComponent(props) {
         },
         {
             startingPoint: [350, 450],
-            endingPoint: [550, 300],
+            endingPoint: [500, 300],
+            dash: 10
+
+        },
+        {
+            startingPoint: [350, 450],
+            endingPoint: [640, 300],
             dash: 10
 
         }
     ]);
     const [classifiers, setClassifiers] = useState([
         {
-            x: 100,
+            x: 20,
             y: 200,
             dash: 10,
             fill: 'white',
@@ -87,7 +160,7 @@ function TrainingComponent(props) {
             features: [],
         },
         {
-            x: 300,
+            x: 160,
             y: 200,
             dash: 10,
             fill: 'white',
@@ -97,7 +170,7 @@ function TrainingComponent(props) {
             features: []
         },
         {
-            x: 500,
+            x: 300,
             y: 200,
             dash: 10,
             fill: 'white',
@@ -105,6 +178,31 @@ function TrainingComponent(props) {
             name: 'dt', 
             w: 1, 
             features: []
+        },
+        {
+            x: 440,
+            y: 200,
+            dash: 10,
+            fill: 'white',
+            picked: false, 
+            name: 'cnn', 
+            w: 1, 
+            features: [],
+            layers: [],
+            activation_functions: [],
+        },
+        {
+            x: 580,
+            y: 200,
+            dash: 10,
+            fill: 'white',
+            picked: false, 
+            name: 'ann', 
+            w: 1, 
+            features: [],
+            layers: [],
+            activation_functions: [],
+
         }
     ]);
     function renderFeatures() {
@@ -129,8 +227,76 @@ function TrainingComponent(props) {
         return featuresRender;
     }
 
+    const renderLayers = (item) => {
+        let currentClassifiers = [...classifiers];
+        var layers = []
+        let name = item['name']
+        for (var i = 0; i < currentClassifiers.length; i++){
+            if (currentClassifiers[i] === item) {
+                layers = currentClassifiers[i]['layers'];
+
+            }
+        }
+        var rendered_layers = []
+        for (let i = 0; i < layers.length; i++) {
+        rendered_layers.push(
+        <Form.Group key={i}>
+        <Form.Label style={{
+        marginBottom:'5px',
+        textAlign: "left",
+        fontWeight: "bold"
+        }}>Layer {i + 1}</Form.Label>
+        <Dropdown>
+        <Dropdown.Toggle variant="success" id="dropdown-basic"
+        style={{
+            width: "100%",
+            textAlign: "left",
+            fontWeight: "bold",
+            marginBottom:'5px',
+            }}>
+        {(activationFunctions[name] && activationFunctions[name][i]) || "Choose Activation Function"}
+        </Dropdown.Toggle>
+        <Dropdown.Menu>
+        <Dropdown.Item style={{ fontWeight: "bold", display: "block" }}
+        onClick={() => handleActivationChange(item,i, "relu")}
+        >
+        ReLU
+        </Dropdown.Item>
+        <Dropdown.Item style={{ fontWeight: "bold", display: "block" }}
+        onClick={() => handleActivationChange(item,i, "sigmoid")}
+        >
+        Sigmoid
+        </Dropdown.Item>
+        <Dropdown.Item style={{ fontWeight: "bold", display: "block" }}
+        onClick={() => handleActivationChange(item,i, "tanh")}
+        >
+        Tanh
+        </Dropdown.Item>
+        <Dropdown.Item style={{ fontWeight: "bold", display: "block" }}
+        onClick={() => handleActivationChange(item,i, "softmax")}
+        >
+        Softmax
+        </Dropdown.Item>
+        <Dropdown.Item style={{ fontWeight: "bold", display: "block" }}
+        onClick={() => handleActivationChange(item,i, "linear")}
+        >
+        Linear
+        </Dropdown.Item>
+        <Dropdown.Item style={{ fontWeight: "bold", display: "block" }}
+        onClick={() => handleActivationChange(item,i, "exponential")}
+        >
+        Exponential
+        </Dropdown.Item>
+        </Dropdown.Menu>
+
+        </Dropdown>
+        </Form.Group>
+        );
+        }
+        return rendered_layers;
+        };
+
     function onDoubleClick(i) {
-        console.log('double clicked' + i)
         let currentClassifiers = [...classifiers];
         let currentinputLines = [...inputLines];
         let currentoutputLines = [...outputLines];
@@ -168,9 +334,10 @@ function TrainingComponent(props) {
         setChecked(updatedList);
         console.log(updatedList);
     };
-    
 
 
+        
+  
 
     function onTrain() {
         setTraining(true)
@@ -179,7 +346,11 @@ function TrainingComponent(props) {
         finalClassifiers = finalClassifiers.filter(classifier => classifier['picked'] === true)
         var models = []
         finalClassifiers.map((classifier,i) => (
+
+            (classifier['name']==="ann" || classifier['name']==="cnn" )?
+            models[i] = {'name':classifier['name'], 'weight':classifier['w'],'activation_functions':classifier['activation_functions']}:
             models[i] = {'name':classifier['name'], 'weight':classifier['w']}
+            
             )
         )
         if(models.length>0){
@@ -189,7 +360,6 @@ function TrainingComponent(props) {
             })
         }
       }
-
 
     return (
         <div style={floatContainer}>
@@ -276,16 +446,6 @@ function TrainingComponent(props) {
             </Stage>
                 </div>
                 </div>
-            {/* <div style={floatChild} className='col-2'>
-                <h4>Choose your features</h4>
-            {features.map((item, index) => (
-            <div key={index}>
-                    <input value={item} type="checkbox" style={{checked: index===0? 'True': 'False' }} onChange={handleCheck}/>
-                <span style={{marginLeft: 10}}>{item}</span>
-            </div>
-            ))}
-                <button onClick={() => onTrain()} style={{ margin:'auto',marginTop:'15px'}} className='btn btn-primary'>Train</button>
-            </div> */}
             <div style={{ marginTop: '20px' }}>
             <h5>Features:</h5>
                     <div>
@@ -304,11 +464,17 @@ function TrainingComponent(props) {
                     <div>
                         <h4>{item.name}</h4>
                         <Form>
-      <Form.Group className="mb-3" controlId="formBasicEmail">
-        <Form.Label>Current Weight</Form.Label>
-                                    <Form.Control type="weight" value={item.w} onChange={(i) => changeWeight(item, i)} />
-
+                            <Form.Group className="mb-3" controlId="formBasicEmail">
+                                <Form.Label>Current Weight</Form.Label>
+                                <Form.Control type="weight" value={item.w} onChange={(i) => changeWeight(item, i)} />
                             </Form.Group>
+                            {(item['name'] === "ann" || item['name'] === 'cnn')?
+                                <div>
+                                {showForm[item.name] && renderLayers(item)}
+                                        <Button onClick={() => handleAddLayer(item)}>Add Layer</Button>
+                                </div> 
+                                
+                                :''}
                         </Form>
                     </div>
                     :''
@@ -322,6 +488,7 @@ function TrainingComponent(props) {
  
 }
 export default TrainingComponent;  
+
 
 
 const stageStyle = {
