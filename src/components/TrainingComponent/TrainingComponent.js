@@ -13,7 +13,7 @@ function TrainingComponent(props) {
     const [arabic, setArabic] = useState(false);
     const [isTraining, setTraining] = useState(false);
     const [showForm, setShowForm] = useState({});
-    const [activationFunctions, setActivationFunctions] = useState({'ann':{0:'relu',1:'sigmoid'},'cnn':{0:'relu',1:'relu'}});
+    const [activationFunctions, setActivationFunctions] = useState({'ann':{0:'relu',1:'softmax'},'cnn':{0:'relu',1:'softmax'}});
 
     const [features, setFeatures] = useState(['pixels_per_segment', 'horizontal_histogram', 'vertical_histogram'])
 
@@ -178,7 +178,7 @@ function TrainingComponent(props) {
             w: 1, 
             features: [],
             layers: [0,1],
-            activation_functions: ['relu','relu'],
+            activation_functions: ['relu','softmax'],
         },
         {
             x: 580,
@@ -190,7 +190,7 @@ function TrainingComponent(props) {
             w: 1, 
             features: [],
             layers: [0,1],
-            activation_functions: ['relu','sigmoid'],
+            activation_functions: ['relu','softmax'],
 
         }
     ]);
