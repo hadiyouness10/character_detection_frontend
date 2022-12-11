@@ -8,14 +8,12 @@ import { Form, Button, Dropdown} from 'react-bootstrap';
 
 function TrainingComponent(props) {
 
-    const [models, setModels] = useState([]);
-
     const [checked, setChecked] = useState([]);
     const [english, setEnglish] = useState(false);
     const [arabic, setArabic] = useState(false);
     const [isTraining, setTraining] = useState(false);
     const [showForm, setShowForm] = useState({});
-    const [activationFunctions, setActivationFunctions] = useState({});
+    const [activationFunctions, setActivationFunctions] = useState({'ann':{0:'relu',1:'sigmoid'},'cnn':{0:'relu',1:'relu'}});
 
     const [features, setFeatures] = useState(['pixels_per_segment', 'horizontal_histogram', 'vertical_histogram'])
 
@@ -63,15 +61,6 @@ function TrainingComponent(props) {
                 let key = item['name'];
                 let keyinner = index
                 let value = activation
-                if(Object.keys(activationFunctions).length === 0){
-                    setActivationFunctions({
-                        [key]: {
-                            ...activationFunctions[key],
-                            [keyinner]:value
-    
-                        },
-                    })
-                }else{
                 setActivationFunctions({
                     ...activationFunctions,
                     [key]: {
@@ -80,7 +69,7 @@ function TrainingComponent(props) {
 
                     },
                 })
-            }
+            
             }
         }
         };
@@ -188,8 +177,8 @@ function TrainingComponent(props) {
             name: 'cnn', 
             w: 1, 
             features: [],
-            layers: [],
-            activation_functions: [],
+            layers: [0,1],
+            activation_functions: ['relu','relu'],
         },
         {
             x: 580,
@@ -200,8 +189,8 @@ function TrainingComponent(props) {
             name: 'ann', 
             w: 1, 
             features: [],
-            layers: [],
-            activation_functions: [],
+            layers: [0,1],
+            activation_functions: ['relu','sigmoid'],
 
         }
     ]);
@@ -227,25 +216,21 @@ function TrainingComponent(props) {
         return featuresRender;
     }
 
-    const renderLayers = (item) => {
-        let currentClassifiers = [...classifiers];
-        var layers = []
-        let name = item['name']
-        for (var i = 0; i < currentClassifiers.length; i++){
-            if (currentClassifiers[i] === item) {
-                layers = currentClassifiers[i]['layers'];
+    const renderMainLayers = (item) => {
 
-            }
-        }
+        let currentClassifiers = [...classifiers];
+        let defalutActivationFunctions = []
+        let name = item['name']
+
         var rendered_layers = []
-        for (let i = 0; i < layers.length; i++) {
+        for (let i = 0; i < 2; i++) {
         rendered_layers.push(
         <Form.Group key={i}>
         <Form.Label style={{
         marginBottom:'5px',
         textAlign: "left",
         fontWeight: "bold"
-        }}>Layer {i + 1}</Form.Label>
+        }}>{i==0?'Input Layer':'Output Layer'}</Form.Label>
         <Dropdown>
         <Dropdown.Toggle variant="success" id="dropdown-basic"
         style={{
@@ -296,6 +281,75 @@ function TrainingComponent(props) {
         return rendered_layers;
         };
 
+        const renderLayers = (item) => {
+            let currentClassifiers = [...classifiers];
+            var layers = []
+            let name = item['name']
+            for (var i = 0; i < currentClassifiers.length; i++){
+                if (currentClassifiers[i] === item) {
+                    layers = currentClassifiers[i]['layers'];
+    
+                }
+            }
+            var rendered_layers = []
+            for (let i = 2; i < layers.length; i++) {
+            rendered_layers.push(
+            <Form.Group key={i}>
+            <Form.Label style={{
+            marginBottom:'5px',
+            textAlign: "left",
+            fontWeight: "bold"
+            }}>Layer {i - 1}</Form.Label>
+            <Dropdown>
+            <Dropdown.Toggle variant="success" id="dropdown-basic"
+            style={{
+                width: "100%",
+                textAlign: "left",
+                fontWeight: "bold",
+                marginBottom:'5px',
+                }}>
+            {(activationFunctions[name] && activationFunctions[name][i]) || "Choose Activation Function"}
+            </Dropdown.Toggle>
+            <Dropdown.Menu>
+            <Dropdown.Item style={{ fontWeight: "bold", display: "block" }}
+            onClick={() => handleActivationChange(item,i, "relu")}
+            >
+            ReLU
+            </Dropdown.Item>
+            <Dropdown.Item style={{ fontWeight: "bold", display: "block" }}
+            onClick={() => handleActivationChange(item,i, "sigmoid")}
+            >
+            Sigmoid
+            </Dropdown.Item>
+            <Dropdown.Item style={{ fontWeight: "bold", display: "block" }}
+            onClick={() => handleActivationChange(item,i, "tanh")}
+            >
+            Tanh
+            </Dropdown.Item>
+            <Dropdown.Item style={{ fontWeight: "bold", display: "block" }}
+            onClick={() => handleActivationChange(item,i, "softmax")}
+            >
+            Softmax
+            </Dropdown.Item>
+            <Dropdown.Item style={{ fontWeight: "bold", display: "block" }}
+            onClick={() => handleActivationChange(item,i, "linear")}
+            >
+            Linear
+            </Dropdown.Item>
+            <Dropdown.Item style={{ fontWeight: "bold", display: "block" }}
+            onClick={() => handleActivationChange(item,i, "exponential")}
+            >
+            Exponential
+            </Dropdown.Item>
+            </Dropdown.Menu>
+    
+            </Dropdown>
+            </Form.Group>
+            );
+            }
+            return rendered_layers;
+            };
+
     function onDoubleClick(i) {
         let currentClassifiers = [...classifiers];
         let currentinputLines = [...inputLines];
@@ -334,10 +388,6 @@ function TrainingComponent(props) {
         setChecked(updatedList);
         console.log(updatedList);
     };
-
-
-        
-  
 
     function onTrain() {
         if(checked == 0){
@@ -473,8 +523,9 @@ function TrainingComponent(props) {
                             </Form.Group>
                             {(item['name'] === "ann" || item['name'] === 'cnn')?
                                 <div>
+                                {renderMainLayers(item)}
                                 {showForm[item.name] && renderLayers(item)}
-                                        <Button onClick={() => handleAddLayer(item)}>Add Layer</Button>
+                                        <Button onClick={() => handleAddLayer(item)}>Add Hidden Layer</Button>
                                 </div> 
                                 
                                 :''}
