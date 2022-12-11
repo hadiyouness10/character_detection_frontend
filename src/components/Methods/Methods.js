@@ -5,6 +5,7 @@ import { backend } from "../../config";
 import exportAsImage from "../../utils/exportAsImage";
 import "../Methods/Methods.css";
 import TranslateDropdown from '../Language/TranslateDropdown'
+import Modal from 'react-modal';
 function Methods({ pickedClassifier }) {
 
   const [features, setFeatures] = useState([]);
@@ -15,6 +16,9 @@ function Methods({ pickedClassifier }) {
   const hiddenFileInput = React.useRef(null);
   const exportRef = React.useRef();
   const [models, setModels] = useState([]);
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [clickedModel, setClickedModel] = useState(false);
+
 
 function getModels() {
   axios.get(backend + '/info').then((response) => {
@@ -34,6 +38,18 @@ function getModels() {
     hiddenFileInput.current.click();
     console.log(image);
   };
+
+  const handleMoreInfo = (model) => {
+    setClickedModel(model)
+    // Open the popup
+    setIsPopupOpen(true);
+  };
+
+  const handleCloseMoreInfoPopup = () => {
+    // Close the popup
+    setIsPopupOpen(false);
+  };
+  
 
   const handleDraw = () => {
     setDraw(!draw);
@@ -161,23 +177,93 @@ function getModels() {
         )
       })}
   </div>
-                    <div className="card-actions">
-                      <div  id="inline">
-                        <div>
-                          <p>Evaluation Score: {parseFloat(models[model]['eval_accuracy']).toFixed(2)}</p>
-                          <p>Testing Score: {parseFloat(models[model]['test_score']).toFixed(2)}</p>
-                        </div>
-                        <div style={{paddingLeft: '150px', paddingTop: '20px'}}>
-                        <button type='button' className="btn btn-warning" style={{marginLeft:'45%'}}>More Info</button>
+            <div className="card-actions">
+              <div  id="inline">
+                  <div>
+                    <p>Evaluation Score: {parseFloat(models[model]['eval_accuracy']).toFixed(2)}</p>
+                    <p>Testing Score: {parseFloat(models[model]['test_score']).toFixed(2)}</p>
+                  </div>
+                  <div style={{paddingLeft: '150px', paddingTop: '20px'}}>
+                    <button onClick={() => handleMoreInfo(models[model])} type='button' className="btn btn-warning" style={{marginLeft:'45%'}}>More Info</button>
+                  </div>
+                </div>
+            </div>
 
-                          </div>
-                        </div>
-    </div>
   </div>
         </div>
 
     })}
 </div>
+
+<Modal
+        isOpen={isPopupOpen}
+        onRequestClose={handleCloseMoreInfoPopup}
+        contentLabel="Model information"
+        style={{
+          content: {
+            width: '600px',
+            height: '400px',
+            top: '50%',
+            left: '50%',
+            right: 'auto',
+            bottom: 'auto',
+            marginRight: '-50%',
+            transform: 'translate(-50%, -50%)',
+            backgroundColor: '#fefefe',
+            border: '1px solid #888',
+            borderRadius: '4px',
+            boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19)'
+          }
+        }}
+      >
+         <h2>Model Information</h2>
+          <p>Model Name: {clickedModel['name']?clickedModel['name']:''}</p>
+          <p>Features Used:</p>
+          <ul>
+            {clickedModel['features']? clickedModel['features'].map((feature) => (
+              <li key={feature}>{feature}</li>
+            )):''}
+          </ul>
+          {clickedModel['name'] =='ensemble' ? 
+          <div>
+          <p>Models Used:</p>
+          <ul>
+          {clickedModel['ensemble_models']? clickedModel['ensemble_models'].map((model) => (
+            <li key={model}>{model}</li>
+          )):''}
+        </ul>
+        <p>Weights</p>
+          <ul>
+          {clickedModel['weights']? clickedModel['weights'].map((weights) => (
+            <li key={weights}>{weights}</li>
+          )):''}
+        </ul>
+        </div>
+        
+        :''}
+          <h5>
+            Evaluation Score: {clickedModel['eval_accuracy'] ? parseFloat(clickedModel['eval_accuracy']).toFixed(2):''}
+          </h5>
+          <h5>
+             Accuracy Score: {clickedModel['test_score'] ? parseFloat(clickedModel['test_score']).toFixed(2):''}
+          </h5>
+
+
+        {/* Close button in the center of the modal */}
+        <button
+         className="btn btn-warning"
+          style={{
+            position: 'absolute',
+            bottom: '20px',
+            left: '50%',
+            transform: 'translateX(-50%)'
+          }}
+          onClick={handleCloseMoreInfoPopup}
+        >
+          Close
+        </button>
+      </Modal>
+
     <div style={{alignContent: 'center', display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: 50}}>
                 <input
           type="file"
