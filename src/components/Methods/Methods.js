@@ -18,7 +18,8 @@ function Methods({ pickedClassifier }) {
   const [models, setModels] = useState([]);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [clickedModel, setClickedModel] = useState(false);
-
+  const [choice, setChoice] = useState('');
+  const dropdownOptions = ['letter', 'word', 'paragraph']
 
 function getModels() {
   axios.get(backend + '/info').then((response) => {
@@ -109,7 +110,8 @@ function getModels() {
     }
     let json_image = {
       'image': base64, 
-      'model_version': checked
+      'model_version': checked, 
+      'category': choice
     }
     axios.post(backend + '/predict', json_image).then((response) => {
         console.log('response')
@@ -273,8 +275,19 @@ function getModels() {
           onChange={(e) => {addImage()}}
         />
         <button onClick={handleClick} className="btn btn-primary button" style={{marginRight: 15, fontSize: '20px'}}>Browse</button>
-        <button onClick={handleDraw} className="btn btn-warning button" style={{fontSize: '20px'}}>Draw</button>
-    </div>
+        <button onClick={handleDraw} className="btn btn-warning button" style={{ fontSize: '20px' }}>Draw</button>
+
+      </div>
+      <div style={{alignContent: 'center', display:'flex', fontSize: 20, justifyContent: 'center', alignItems: 'center'}}>
+      <label style={{marginRight: 10}}>Select a category:</label>
+      <select onChange={e => setChoice(e.target.value)}>
+        {dropdownOptions.map((option, index) => (
+          <option key={option+index} value={option}>
+            {option}
+          </option>
+        ))}
+        </select>
+        </div>
     <div style={{alignContent: 'center', display: 'flex', justifyContent: 'center', marginTop: 20}}>
       {image !== undefined && !draw? <div className="">
         <img className="myImage" style={{width: '300px', height: '300px'}} src={image} alt="" />
@@ -310,12 +323,18 @@ function getModels() {
           </Stage>
           : ''}
       </div>
+
+
+
       <button onClick={handlePredict} disabled={(checked.length === 0 || (lines.length === 0 && image === undefined)) ? true : false} className="btn btn-secondary button" style={{ marginLeft: '47%', fontSize: '30px' }}>Predict</button>
+
       {result.length > 0 ?
         <div style={{justifyContent: 'center', alignItems: 'center', display: 'flex', fontSize: '30px'}}>
           The predicted {result.length > 1 ? 'word' : 'letter'} is:&nbsp; <strong>{result}</strong>
         </div> : ''}
+
       <div style={{ justifyContent: 'center', alignItems: 'center', display: 'flex', fontSize: '18px' }}>
+
       <TranslateDropdown/>
 
       </div>
