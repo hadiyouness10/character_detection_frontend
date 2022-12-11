@@ -164,16 +164,14 @@ function getModels() {
                     <div className="card-actions">
                       <div  id="inline">
                         <div>
-                          <p>Evaluation Score: {models[model]['eval_accuracy']}</p>
-                          <p>Testing Score: {models[model]['test_score']}</p>
+                          <p>Evaluation Score: {parseFloat(models[model]['eval_accuracy']).toFixed(2)}</p>
+                          <p>Testing Score: {parseFloat(models[model]['test_score']).toFixed(2)}</p>
                         </div>
                         <div style={{paddingLeft: '150px', paddingTop: '20px'}}>
                         <button type='button' className="btn btn-warning" style={{marginLeft:'45%'}}>More Info</button>
 
                           </div>
                         </div>
-
-                      
     </div>
   </div>
         </div>

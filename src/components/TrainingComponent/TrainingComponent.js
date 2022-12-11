@@ -340,6 +340,9 @@ function TrainingComponent(props) {
   
 
     function onTrain() {
+        if(checked == 0){
+            return;
+        }
         setTraining(true)
 
         let finalClassifiers = [...classifiers];
