@@ -18,7 +18,7 @@ function Methods({ pickedClassifier }) {
   const [models, setModels] = useState([]);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [clickedModel, setClickedModel] = useState(false);
-  const [choice, setChoice] = useState('');
+  const [choice, setChoice] = useState('letter');
   const dropdownOptions = ['letter', 'word', 'paragraph']
 
 function getModels() {
