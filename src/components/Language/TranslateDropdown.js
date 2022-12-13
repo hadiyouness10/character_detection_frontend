@@ -3,25 +3,25 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { BsFillVolumeUpFill } from "react-icons/bs";
 
-const TranslateDropdown = () => {
+const TranslateDropdown = (props) => {
   // State to store the selected language
-  const [selectedLanguage, setSelectedLanguage] = useState('English ar');
+  const [selectedLanguage, setSelectedLanguage] = useState('English en');
 
   // State to store the list of languages
   const [languages, setLanguages] = useState([]);
     const [translation, setTranslation] = useState('');
   // Function to translate the text to the selected language
-  const translateText = async (text) => {
+  const translateText = async () => {
     // Construct the URL for the MyMemory Translation Memory API
+    var text = props.words;
       const url = 'https://api.mymemory.translated.net/get';
-      console.log('selected language is; ')
-      console.log(selectedLanguage);
-      var lang = selectedLanguage.split(' ')[0]
+      var lang = selectedLanguage.split(' ')[1]
     const params = {
       q: text,
       langpair: `en|${lang}`,
     };
-
+    console.log(params);
+    console.log('translating: ' + text)
     // Make the GET request to the MyMemory Translation Memory API
     const response = await axios.get(url, { params });
     const data = response.data;
@@ -81,7 +81,7 @@ const TranslateDropdown = () => {
           </option>
         ))}
       </select>
-      <button className='btn btn-primary' style={{marginLeft: 10}} onClick={() => translateText('hello world')}>
+      <button className='btn btn-primary' style={{marginLeft: 10}} onClick={() => translateText()}>
         Translate
           </button>
           {translation.length > 0 ?

@@ -335,7 +335,7 @@ function getModels() {
 
       <div style={{ justifyContent: 'center', alignItems: 'center', display: 'flex', fontSize: '18px' }}>
 
-      <TranslateDropdown/>
+      <TranslateDropdown words={result} />
 
       </div>
       <hr></hr>
